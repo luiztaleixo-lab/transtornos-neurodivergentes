@@ -8,6 +8,7 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 from models import db, User, ForumRoom, ForumMessage, PrivateMessage
 from chatbot import get_response, CHATBOT_TOPICS
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'neuroguia-chave-secreta-segura-2026')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
