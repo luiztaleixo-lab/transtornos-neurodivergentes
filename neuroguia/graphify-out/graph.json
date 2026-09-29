@@ -1,0 +1,1203 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "app.py",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L1",
+      "id": "app",
+      "community": 0
+    },
+    {
+      "label": "contains_image_content()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L32",
+      "id": "app_contains_image_content",
+      "community": 4
+    },
+    {
+      "label": "sanitize_message()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L40",
+      "id": "app_sanitize_message",
+      "community": 4
+    },
+    {
+      "label": "load_conditions()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L44",
+      "id": "app_load_conditions",
+      "community": 5
+    },
+    {
+      "label": "load_user()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L52",
+      "id": "app_load_user",
+      "community": 0
+    },
+    {
+      "label": "index()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L58",
+      "id": "app_index",
+      "community": 5
+    },
+    {
+      "label": "condition_detail()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L65",
+      "id": "app_condition_detail",
+      "community": 5
+    },
+    {
+      "label": "login()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L75",
+      "id": "app_login",
+      "community": 0
+    },
+    {
+      "label": "register()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L99",
+      "id": "app_register",
+      "community": 0
+    },
+    {
+      "label": "logout()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L142",
+      "id": "app_logout",
+      "community": 0
+    },
+    {
+      "label": "profile()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L151",
+      "id": "app_profile",
+      "community": 0
+    },
+    {
+      "label": "view_user_profile()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L167",
+      "id": "app_view_user_profile",
+      "community": 0
+    },
+    {
+      "label": "search_users()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L174",
+      "id": "app_search_users",
+      "community": 0
+    },
+    {
+      "label": "forum_list()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L184",
+      "id": "app_forum_list",
+      "community": 0
+    },
+    {
+      "label": "forum_room()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L189",
+      "id": "app_forum_room",
+      "community": 0
+    },
+    {
+      "label": "create_room()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L199",
+      "id": "app_create_room",
+      "community": 0
+    },
+    {
+      "label": "private_chat()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L225",
+      "id": "app_private_chat",
+      "community": 0
+    },
+    {
+      "label": "chatbot_page()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L246",
+      "id": "app_chatbot_page",
+      "community": 0
+    },
+    {
+      "label": "chatbot_api()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L250",
+      "id": "app_chatbot_api",
+      "community": 0
+    },
+    {
+      "label": "handle_join_forum()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L259",
+      "id": "app_handle_join_forum",
+      "community": 0
+    },
+    {
+      "label": "handle_leave_forum()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L266",
+      "id": "app_handle_leave_forum",
+      "community": 0
+    },
+    {
+      "label": "handle_forum_message()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L273",
+      "id": "app_handle_forum_message",
+      "community": 4
+    },
+    {
+      "label": "handle_join_private()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L308",
+      "id": "app_handle_join_private",
+      "community": 0
+    },
+    {
+      "label": "handle_leave_private()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L323",
+      "id": "app_handle_leave_private",
+      "community": 0
+    },
+    {
+      "label": "handle_private_message()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L329",
+      "id": "app_handle_private_message",
+      "community": 4
+    },
+    {
+      "label": "init_db()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L366",
+      "id": "app_init_db",
+      "community": 0
+    },
+    {
+      "label": "models.py",
+      "file_type": "code",
+      "source_file": "models.py",
+      "source_location": "L1",
+      "id": "models",
+      "community": 1
+    },
+    {
+      "label": "utc_now()",
+      "file_type": "code",
+      "source_file": "models.py",
+      "source_location": "L8",
+      "id": "models_utc_now",
+      "community": 1
+    },
+    {
+      "label": "User",
+      "file_type": "code",
+      "source_file": "models.py",
+      "source_location": "L11",
+      "id": "models_user",
+      "community": 1
+    },
+    {
+      "label": "UserMixin",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "usermixin",
+      "community": 1
+    },
+    {
+      "label": ".set_password()",
+      "file_type": "code",
+      "source_file": "models.py",
+      "source_location": "L24",
+      "id": "models_user_set_password",
+      "community": 1
+    },
+    {
+      "label": ".check_password()",
+      "file_type": "code",
+      "source_file": "models.py",
+      "source_location": "L27",
+      "id": "models_user_check_password",
+      "community": 1
+    },
+    {
+      "label": ".to_dict()",
+      "file_type": "code",
+      "source_file": "models.py",
+      "source_location": "L30",
+      "id": "models_user_to_dict",
+      "community": 1
+    },
+    {
+      "label": "ForumRoom",
+      "file_type": "code",
+      "source_file": "models.py",
+      "source_location": "L40",
+      "id": "models_forumroom",
+      "community": 1
+    },
+    {
+      "label": ".to_dict()",
+      "file_type": "code",
+      "source_file": "models.py",
+      "source_location": "L52",
+      "id": "models_forumroom_to_dict",
+      "community": 1
+    },
+    {
+      "label": "ForumMessage",
+      "file_type": "code",
+      "source_file": "models.py",
+      "source_location": "L63",
+      "id": "models_forummessage",
+      "community": 1
+    },
+    {
+      "label": ".to_dict()",
+      "file_type": "code",
+      "source_file": "models.py",
+      "source_location": "L75",
+      "id": "models_forummessage_to_dict",
+      "community": 1
+    },
+    {
+      "label": "PrivateMessage",
+      "file_type": "code",
+      "source_file": "models.py",
+      "source_location": "L87",
+      "id": "models_privatemessage",
+      "community": 1
+    },
+    {
+      "label": ".to_dict()",
+      "file_type": "code",
+      "source_file": "models.py",
+      "source_location": "L99",
+      "id": "models_privatemessage_to_dict",
+      "community": 1
+    },
+    {
+      "label": "chatbot.py",
+      "file_type": "code",
+      "source_file": "chatbot.py",
+      "source_location": "L1",
+      "id": "chatbot",
+      "community": 6
+    },
+    {
+      "label": "get_response()",
+      "file_type": "code",
+      "source_file": "chatbot.py",
+      "source_location": "L74",
+      "id": "chatbot_get_response",
+      "community": 6
+    },
+    {
+      "label": "Flask Application Core (app.py)",
+      "file_type": "code",
+      "source_file": "app.py",
+      "id": "flask_app",
+      "community": 2
+    },
+    {
+      "label": "Authentication & Session (Flask-Login)",
+      "file_type": "code",
+      "source_file": "app.py",
+      "id": "auth_system",
+      "community": 2
+    },
+    {
+      "label": "Real-Time Engine (Flask-SocketIO)",
+      "file_type": "code",
+      "source_file": "app.py",
+      "id": "socketio_system",
+      "community": 2
+    },
+    {
+      "label": "Anti-Image Filter Security",
+      "file_type": "code",
+      "source_file": "app.py",
+      "id": "image_security",
+      "community": 2
+    },
+    {
+      "label": "SQLAlchemy Models (models.py)",
+      "file_type": "code",
+      "source_file": "models.py",
+      "id": "db_models",
+      "community": 3
+    },
+    {
+      "label": "User Model (User)",
+      "file_type": "code",
+      "source_file": "models.py",
+      "id": "user_model",
+      "community": 3
+    },
+    {
+      "label": "Forum Models (ForumRoom, ForumMessage)",
+      "file_type": "code",
+      "source_file": "models.py",
+      "id": "forum_model",
+      "community": 3
+    },
+    {
+      "label": "Private Message Model (PrivateMessage)",
+      "file_type": "code",
+      "source_file": "models.py",
+      "id": "private_msg_model",
+      "community": 3
+    },
+    {
+      "label": "Chatbot Logic & Topics (chatbot.py)",
+      "file_type": "code",
+      "source_file": "chatbot.py",
+      "id": "chatbot_core",
+      "community": 2
+    },
+    {
+      "label": "10 Clinical Conditions JSON",
+      "file_type": "document",
+      "source_file": "static/data/conditions.json",
+      "id": "conditions_db",
+      "community": 2
+    },
+    {
+      "label": "Conditions Catalog View (index.html)",
+      "file_type": "document",
+      "source_file": "templates/index.html",
+      "id": "view_conditions",
+      "community": 2
+    },
+    {
+      "label": "Forum & Room Chat View (forum.html)",
+      "file_type": "document",
+      "source_file": "templates/forum.html",
+      "id": "view_forum",
+      "community": 2
+    },
+    {
+      "label": "1:1 Private Chat View (private_chat.html)",
+      "file_type": "document",
+      "source_file": "templates/private_chat.html",
+      "id": "view_private_chat",
+      "community": 2
+    },
+    {
+      "label": "User Search View (search.html)",
+      "file_type": "document",
+      "source_file": "templates/search.html",
+      "id": "view_search",
+      "community": 3
+    },
+    {
+      "label": "Profile Customizer View (profile.html)",
+      "file_type": "document",
+      "source_file": "templates/profile.html",
+      "id": "view_profile",
+      "community": 3
+    },
+    {
+      "label": "Interactive Chatbot View (chatbot.html)",
+      "file_type": "document",
+      "source_file": "templates/chatbot.html",
+      "id": "view_chatbot",
+      "community": 2
+    },
+    {
+      "label": "SocketIO Client Coordinator (chat.js)",
+      "file_type": "code",
+      "source_file": "static/js/chat.js",
+      "id": "client_chat_js",
+      "community": 2
+    },
+    {
+      "label": "Chatbot Client Delay & Typing (chatbot.js)",
+      "file_type": "code",
+      "source_file": "static/js/chatbot.js",
+      "id": "client_bot_js",
+      "community": 2
+    },
+    {
+      "label": "Editorial Design System CSS (style.css)",
+      "file_type": "document",
+      "source_file": "static/css/style.css",
+      "id": "design_system",
+      "community": 7
+    }
+  ],
+  "links": [
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "models",
+      "source": "app",
+      "target": "models",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "chatbot",
+      "source": "app",
+      "target": "chatbot",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L32",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_contains_image_content",
+      "source": "app",
+      "target": "app_contains_image_content",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_sanitize_message",
+      "source": "app",
+      "target": "app_sanitize_message",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_load_conditions",
+      "source": "app",
+      "target": "app_load_conditions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_load_user",
+      "source": "app",
+      "target": "app_load_user",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L58",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_index",
+      "source": "app",
+      "target": "app_index",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L65",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_condition_detail",
+      "source": "app",
+      "target": "app_condition_detail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L75",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_login",
+      "source": "app",
+      "target": "app_login",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_register",
+      "source": "app",
+      "target": "app_register",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L142",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_logout",
+      "source": "app",
+      "target": "app_logout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L151",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_profile",
+      "source": "app",
+      "target": "app_profile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L167",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_view_user_profile",
+      "source": "app",
+      "target": "app_view_user_profile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L174",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_search_users",
+      "source": "app",
+      "target": "app_search_users",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L184",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_forum_list",
+      "source": "app",
+      "target": "app_forum_list",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L189",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_forum_room",
+      "source": "app",
+      "target": "app_forum_room",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L199",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_create_room",
+      "source": "app",
+      "target": "app_create_room",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L225",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_private_chat",
+      "source": "app",
+      "target": "app_private_chat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L246",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_chatbot_page",
+      "source": "app",
+      "target": "app_chatbot_page",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L250",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_chatbot_api",
+      "source": "app",
+      "target": "app_chatbot_api",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L259",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handle_join_forum",
+      "source": "app",
+      "target": "app_handle_join_forum",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L266",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handle_leave_forum",
+      "source": "app",
+      "target": "app_handle_leave_forum",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L273",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handle_forum_message",
+      "source": "app",
+      "target": "app_handle_forum_message",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L308",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handle_join_private",
+      "source": "app",
+      "target": "app_handle_join_private",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L323",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handle_leave_private",
+      "source": "app",
+      "target": "app_handle_leave_private",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L329",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handle_private_message",
+      "source": "app",
+      "target": "app_handle_private_message",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L366",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_init_db",
+      "source": "app",
+      "target": "app_init_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "source_file": "app.py",
+      "source_location": "L284",
+      "weight": 0.8,
+      "_src": "app_handle_forum_message",
+      "_tgt": "app_contains_image_content",
+      "source": "app_contains_image_content",
+      "target": "app_handle_forum_message",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "source_file": "app.py",
+      "source_location": "L340",
+      "weight": 0.8,
+      "_src": "app_handle_private_message",
+      "_tgt": "app_contains_image_content",
+      "source": "app_contains_image_content",
+      "target": "app_handle_private_message",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "source_file": "app.py",
+      "source_location": "L288",
+      "weight": 0.8,
+      "_src": "app_handle_forum_message",
+      "_tgt": "app_sanitize_message",
+      "source": "app_sanitize_message",
+      "target": "app_handle_forum_message",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "source_file": "app.py",
+      "source_location": "L344",
+      "weight": 0.8,
+      "_src": "app_handle_private_message",
+      "_tgt": "app_sanitize_message",
+      "source": "app_sanitize_message",
+      "target": "app_handle_private_message",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "source_file": "app.py",
+      "source_location": "L59",
+      "weight": 0.8,
+      "_src": "app_index",
+      "_tgt": "app_load_conditions",
+      "source": "app_load_conditions",
+      "target": "app_index",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "source_file": "app.py",
+      "source_location": "L66",
+      "weight": 0.8,
+      "_src": "app_condition_detail",
+      "_tgt": "app_load_conditions",
+      "source": "app_load_conditions",
+      "target": "app_condition_detail",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "models.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_src": "models",
+      "_tgt": "models_utc_now",
+      "source": "models",
+      "target": "models_utc_now",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "models.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_src": "models",
+      "_tgt": "models_user",
+      "source": "models",
+      "target": "models_user",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "models.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_src": "models",
+      "_tgt": "models_forumroom",
+      "source": "models",
+      "target": "models_forumroom",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "models.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_src": "models",
+      "_tgt": "models_forummessage",
+      "source": "models",
+      "target": "models_forummessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "models.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "_src": "models",
+      "_tgt": "models_privatemessage",
+      "source": "models",
+      "target": "models_privatemessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "models.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_src": "models_user",
+      "_tgt": "usermixin",
+      "source": "models_user",
+      "target": "usermixin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "models.py",
+      "source_location": "L24",
+      "weight": 1.0,
+      "_src": "models_user",
+      "_tgt": "models_user_set_password",
+      "source": "models_user",
+      "target": "models_user_set_password",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "models.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_src": "models_user",
+      "_tgt": "models_user_check_password",
+      "source": "models_user",
+      "target": "models_user_check_password",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "models.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_src": "models_user",
+      "_tgt": "models_user_to_dict",
+      "source": "models_user",
+      "target": "models_user_to_dict",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "models.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "_src": "models_forumroom",
+      "_tgt": "models_forumroom_to_dict",
+      "source": "models_forumroom",
+      "target": "models_forumroom_to_dict",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "models.py",
+      "source_location": "L75",
+      "weight": 1.0,
+      "_src": "models_forummessage",
+      "_tgt": "models_forummessage_to_dict",
+      "source": "models_forummessage",
+      "target": "models_forummessage_to_dict",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "models.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "_src": "models_privatemessage",
+      "_tgt": "models_privatemessage_to_dict",
+      "source": "models_privatemessage",
+      "target": "models_privatemessage_to_dict",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "chatbot.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "_src": "chatbot",
+      "_tgt": "chatbot_get_response",
+      "source": "chatbot",
+      "target": "chatbot_get_response",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app.py",
+      "_src": "flask_app",
+      "_tgt": "db_models",
+      "source": "flask_app",
+      "target": "db_models"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app.py",
+      "_src": "flask_app",
+      "_tgt": "socketio_system",
+      "source": "flask_app",
+      "target": "socketio_system"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app.py",
+      "_src": "flask_app",
+      "_tgt": "auth_system",
+      "source": "flask_app",
+      "target": "auth_system"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app.py",
+      "_src": "flask_app",
+      "_tgt": "chatbot_core",
+      "source": "flask_app",
+      "target": "chatbot_core"
+    },
+    {
+      "relation": "enforces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app.py",
+      "_src": "flask_app",
+      "_tgt": "image_security",
+      "source": "flask_app",
+      "target": "image_security"
+    },
+    {
+      "relation": "reads",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app.py",
+      "_src": "flask_app",
+      "_tgt": "conditions_db",
+      "source": "flask_app",
+      "target": "conditions_db"
+    },
+    {
+      "relation": "enforces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app.py",
+      "_src": "socketio_system",
+      "_tgt": "image_security",
+      "source": "socketio_system",
+      "target": "image_security"
+    },
+    {
+      "relation": "synchronizes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "static/js/chat.js",
+      "_src": "socketio_system",
+      "_tgt": "client_chat_js",
+      "source": "socketio_system",
+      "target": "client_chat_js"
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "models.py",
+      "_src": "db_models",
+      "_tgt": "user_model",
+      "source": "db_models",
+      "target": "user_model"
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "models.py",
+      "_src": "db_models",
+      "_tgt": "forum_model",
+      "source": "db_models",
+      "target": "forum_model"
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "models.py",
+      "_src": "db_models",
+      "_tgt": "private_msg_model",
+      "source": "db_models",
+      "target": "private_msg_model"
+    },
+    {
+      "relation": "edits",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/profile.html",
+      "_src": "view_profile",
+      "_tgt": "user_model",
+      "source": "user_model",
+      "target": "view_profile"
+    },
+    {
+      "relation": "queries",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/search.html",
+      "_src": "view_search",
+      "_tgt": "user_model",
+      "source": "user_model",
+      "target": "view_search"
+    },
+    {
+      "relation": "fetches",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "static/js/chatbot.js",
+      "_src": "client_bot_js",
+      "_tgt": "chatbot_core",
+      "source": "chatbot_core",
+      "target": "client_bot_js"
+    },
+    {
+      "relation": "renders",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/index.html",
+      "_src": "view_conditions",
+      "_tgt": "conditions_db",
+      "source": "conditions_db",
+      "target": "view_conditions"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/forum.html",
+      "_src": "view_forum",
+      "_tgt": "client_chat_js",
+      "source": "view_forum",
+      "target": "client_chat_js"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/private_chat.html",
+      "_src": "view_private_chat",
+      "_tgt": "client_chat_js",
+      "source": "view_private_chat",
+      "target": "client_chat_js"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/chatbot.html",
+      "_src": "view_chatbot",
+      "_tgt": "client_bot_js",
+      "source": "view_chatbot",
+      "target": "client_bot_js"
+    }
+  ],
+  "hyperedges": []
+}

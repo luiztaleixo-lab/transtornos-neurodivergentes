@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NeuroGuia | Portal de Neurodesenvolvimento{% endblock %}</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</head>
+<body>
+    <aside class="disclaimer-banner" role="note" aria-label="Aviso institucional e clinico">
+        <div class="container disclaimer-inner">
+            <span class="disclaimer-tag">Aviso Institucional</span>
+            <p class="disclaimer-text">
+                O conteudo deste portal tem finalidade exclusivamente educativa e informativa. Nao substitui a avaliacao, o diagnostico clinico ou o acompanhamento por profissionais medicos e multidisciplinares qualificados.
+            </p>
+        </div>
+    </aside>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <div class="brand-area">
+                <a href="{{ url_for('index') }}" class="site-logo">
+                    <span class="logo-title">NeuroGuia</span>
+                    <span class="logo-subtitle">Portal de Neurodesenvolvimento</span>
+                </a>
+            </div>
+
+            <nav class="main-nav" aria-label="Navegacao principal">
+                <ul class="nav-list">
+                    <li><a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint in ['index', 'condition_detail'] %}active{% endif %}">Condicoes Clinicas</a></li>
+                    <li><a href="{{ url_for('forum_list') }}" class="nav-link {% if request.endpoint in ['forum_list', 'forum_room'] %}active{% endif %}">Forum Comunitario</a></li>
+                    <li><a href="{{ url_for('chatbot_page') }}" class="nav-link {% if request.endpoint == 'chatbot_page' %}active{% endif %}">Assistente Interativo</a></li>
+                    <li><a href="{{ url_for('search_users') }}" class="nav-link {% if request.endpoint == 'search_users' %}active{% endif %}">Buscar Pessoas</a></li>
+                </ul>
+            </nav>
+
+            <div class="user-area">
+                {% if current_user.is_authenticated %}
+                    <div class="user-menu">
+                        <a href="{{ url_for('profile') }}" class="user-pill" title="Meu perfil">
+                            <span class="user-avatar-small" style="background-color: {{ current_user.avatar_color }};">
+                                {{ current_user.username[:2].upper() }}
+                            </span>
+                            <span class="user-name-label">{{ current_user.username }}</span>
+                        </a>
+                        <a href="{{ url_for('logout') }}" class="btn-subtle">Sair</a>
+                    </div>
+                {% else %}
+                    <div class="auth-actions">
+                        <a href="{{ url_for('login') }}" class="btn-subtle">Entrar</a>
+                        <a href="{{ url_for('register') }}" class="btn-primary">Criar Conta</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div class="container flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        <span class="alert-message">{{ message }}</span>
+                        <button type="button" class="alert-close" onclick="this.parentElement.remove();" aria-label="Fechar aviso">&times;</button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <main class="site-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <div class="footer-col">
+                <span class="footer-title">NeuroGuia</span>
+                <p class="footer-desc">Plataforma colaborativa e informativa sobre condicoes do neurodesenvolvimento e saude mental correlata.</p>
+            </div>
+            <div class="footer-col">
+                <span class="footer-heading">Navegacao</span>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('index') }}">Guia das 10 Condicoes</a></li>
+                    <li><a href="{{ url_for('forum_list') }}">Salas de Discussao</a></li>
+                    <li><a href="{{ url_for('chatbot_page') }}">NeuroGuia Chatbot</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <span class="footer-heading">Diretrizes</span>
+                <p class="footer-note">Espaco seguro de dialogo e aprendizagem. Mensagens sao monitoradas para garantia do respeito mutuo e ausencia de conteudos inadequados.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 NeuroGuia. Todos os direitos reservados. Conteudo estritamente educativo.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

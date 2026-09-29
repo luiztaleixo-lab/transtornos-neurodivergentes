@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>graphify - graphify-out/graph.html</title>
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; height: 100vh; overflow: hidden; }
+  #graph { flex: 1; }
+  #sidebar { width: 280px; background: #1a1a2e; border-left: 1px solid #2a2a4e; display: flex; flex-direction: column; overflow: hidden; }
+  #search-wrap { padding: 12px; border-bottom: 1px solid #2a2a4e; }
+  #search { width: 100%; background: #0f0f1a; border: 1px solid #3a3a5e; color: #e0e0e0; padding: 7px 10px; border-radius: 6px; font-size: 13px; outline: none; }
+  #search:focus { border-color: #4E79A7; }
+  #search-results { max-height: 140px; overflow-y: auto; padding: 4px 12px; border-bottom: 1px solid #2a2a4e; display: none; }
+  .search-item { padding: 4px 6px; cursor: pointer; border-radius: 4px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .search-item:hover { background: #2a2a4e; }
+  #info-panel { padding: 14px; border-bottom: 1px solid #2a2a4e; min-height: 140px; }
+  #info-panel h3 { font-size: 13px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  #info-content { font-size: 13px; color: #ccc; line-height: 1.6; }
+  #info-content .field { margin-bottom: 5px; }
+  #info-content .field b { color: #e0e0e0; }
+  #info-content .empty { color: #555; font-style: italic; }
+  .neighbor-link { display: block; padding: 2px 6px; margin: 2px 0; border-radius: 3px; cursor: pointer; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid #333; }
+  .neighbor-link:hover { background: #2a2a4e; }
+  #neighbors-list { max-height: 160px; overflow-y: auto; margin-top: 4px; }
+  #legend-wrap { flex: 1; overflow-y: auto; padding: 12px; }
+  #legend-wrap h3 { font-size: 13px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; border-radius: 4px; font-size: 12px; }
+  .legend-item:hover { background: #2a2a4e; padding-left: 4px; }
+  .legend-item.dimmed { opacity: 0.35; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .legend-count { color: #666; font-size: 11px; }
+  #stats { padding: 10px 14px; border-top: 1px solid #2a2a4e; font-size: 11px; color: #555; }
+</style>
+</head>
+<body>
+<div id="graph"></div>
+<div id="sidebar">
+  <div id="search-wrap">
+    <input id="search" type="text" placeholder="Search nodes..." autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+  <div id="info-panel">
+    <h3>Node Info</h3>
+    <div id="info-content"><span class="empty">Click a node to inspect it</span></div>
+  </div>
+  <div id="legend-wrap">
+    <h3>Communities</h3>
+    <div id="legend"></div>
+  </div>
+  <div id="stats">60 nodes &middot; 64 edges &middot; 8 communities</div>
+</div>
+<script>
+const RAW_NODES = [{"id": "app", "label": "app.py", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 40.0, "font": {"size": 12, "color": "#ffffff"}, "title": "app.py", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 27}, {"id": "app_contains_image_content", "label": "contains_image_content()", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "contains_image_content()", "community": 4, "community_name": "Community 4", "source_file": "app.py", "file_type": "code", "degree": 3}, {"id": "app_sanitize_message", "label": "sanitize_message()", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "sanitize_message()", "community": 4, "community_name": "Community 4", "source_file": "app.py", "file_type": "code", "degree": 3}, {"id": "app_load_conditions", "label": "load_conditions()", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "load_conditions()", "community": 5, "community_name": "Community 5", "source_file": "app.py", "file_type": "code", "degree": 3}, {"id": "app_load_user", "label": "load_user()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "load_user()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_index", "label": "index()", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 12.2, "font": {"size": 0, "color": "#ffffff"}, "title": "index()", "community": 5, "community_name": "Community 5", "source_file": "app.py", "file_type": "code", "degree": 2}, {"id": "app_condition_detail", "label": "condition_detail()", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 12.2, "font": {"size": 0, "color": "#ffffff"}, "title": "condition_detail()", "community": 5, "community_name": "Community 5", "source_file": "app.py", "file_type": "code", "degree": 2}, {"id": "app_login", "label": "login()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "login()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_register", "label": "register()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "register()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_logout", "label": "logout()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "logout()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_profile", "label": "profile()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "profile()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_view_user_profile", "label": "view_user_profile()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "view_user_profile()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_search_users", "label": "search_users()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "search_users()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_forum_list", "label": "forum_list()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "forum_list()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_forum_room", "label": "forum_room()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "forum_room()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_create_room", "label": "create_room()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "create_room()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_private_chat", "label": "private_chat()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "private_chat()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_chatbot_page", "label": "chatbot_page()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "chatbot_page()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_chatbot_api", "label": "chatbot_api()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "chatbot_api()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_handle_join_forum", "label": "handle_join_forum()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "handle_join_forum()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_handle_leave_forum", "label": "handle_leave_forum()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "handle_leave_forum()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_handle_forum_message", "label": "handle_forum_message()", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "handle_forum_message()", "community": 4, "community_name": "Community 4", "source_file": "app.py", "file_type": "code", "degree": 3}, {"id": "app_handle_join_private", "label": "handle_join_private()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "handle_join_private()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_handle_leave_private", "label": "handle_leave_private()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "handle_leave_private()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "app_handle_private_message", "label": "handle_private_message()", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "handle_private_message()", "community": 4, "community_name": "Community 4", "source_file": "app.py", "file_type": "code", "degree": 3}, {"id": "app_init_db", "label": "init_db()", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "init_db()", "community": 0, "community_name": "Flask Backend & WebSockets", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "models", "label": "models.py", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 16.7, "font": {"size": 12, "color": "#ffffff"}, "title": "models.py", "community": 1, "community_name": "SQLAlchemy Data Layer", "source_file": "models.py", "file_type": "code", "degree": 6}, {"id": "models_utc_now", "label": "utc_now()", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "utc_now()", "community": 1, "community_name": "SQLAlchemy Data Layer", "source_file": "models.py", "file_type": "code", "degree": 1}, {"id": "models_user", "label": "User", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 15.6, "font": {"size": 12, "color": "#ffffff"}, "title": "User", "community": 1, "community_name": "SQLAlchemy Data Layer", "source_file": "models.py", "file_type": "code", "degree": 5}, {"id": "usermixin", "label": "UserMixin", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "UserMixin", "community": 1, "community_name": "SQLAlchemy Data Layer", "source_file": "", "file_type": "code", "degree": 1}, {"id": "models_user_set_password", "label": ".set_password()", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": ".set_password()", "community": 1, "community_name": "SQLAlchemy Data Layer", "source_file": "models.py", "file_type": "code", "degree": 1}, {"id": "models_user_check_password", "label": ".check_password()", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": ".check_password()", "community": 1, "community_name": "SQLAlchemy Data Layer", "source_file": "models.py", "file_type": "code", "degree": 1}, {"id": "models_user_to_dict", "label": ".to_dict()", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": ".to_dict()", "community": 1, "community_name": "SQLAlchemy Data Layer", "source_file": "models.py", "file_type": "code", "degree": 1}, {"id": "models_forumroom", "label": "ForumRoom", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 12.2, "font": {"size": 0, "color": "#ffffff"}, "title": "ForumRoom", "community": 1, "community_name": "SQLAlchemy Data Layer", "source_file": "models.py", "file_type": "code", "degree": 2}, {"id": "models_forumroom_to_dict", "label": ".to_dict()", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": ".to_dict()", "community": 1, "community_name": "SQLAlchemy Data Layer", "source_file": "models.py", "file_type": "code", "degree": 1}, {"id": "models_forummessage", "label": "ForumMessage", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 12.2, "font": {"size": 0, "color": "#ffffff"}, "title": "ForumMessage", "community": 1, "community_name": "SQLAlchemy Data Layer", "source_file": "models.py", "file_type": "code", "degree": 2}, {"id": "models_forummessage_to_dict", "label": ".to_dict()", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": ".to_dict()", "community": 1, "community_name": "SQLAlchemy Data Layer", "source_file": "models.py", "file_type": "code", "degree": 1}, {"id": "models_privatemessage", "label": "PrivateMessage", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 12.2, "font": {"size": 0, "color": "#ffffff"}, "title": "PrivateMessage", "community": 1, "community_name": "SQLAlchemy Data Layer", "source_file": "models.py", "file_type": "code", "degree": 2}, {"id": "models_privatemessage_to_dict", "label": ".to_dict()", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": ".to_dict()", "community": 1, "community_name": "SQLAlchemy Data Layer", "source_file": "models.py", "file_type": "code", "degree": 1}, {"id": "chatbot", "label": "chatbot.py", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 12.2, "font": {"size": 0, "color": "#ffffff"}, "title": "chatbot.py", "community": 6, "community_name": "Community 6", "source_file": "chatbot.py", "file_type": "code", "degree": 2}, {"id": "chatbot_get_response", "label": "get_response()", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "get_response()", "community": 6, "community_name": "Community 6", "source_file": "chatbot.py", "file_type": "code", "degree": 1}, {"id": "flask_app", "label": "Flask Application Core (app.py)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 16.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Flask Application Core (app.py)", "community": 2, "community_name": "Clinical Knowledge & Chatbot", "source_file": "app.py", "file_type": "code", "degree": 6}, {"id": "auth_system", "label": "Authentication &amp; Session (Flask-Login)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Authentication &amp; Session (Flask-Login)", "community": 2, "community_name": "Clinical Knowledge & Chatbot", "source_file": "app.py", "file_type": "code", "degree": 1}, {"id": "socketio_system", "label": "Real-Time Engine (Flask-SocketIO)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "Real-Time Engine (Flask-SocketIO)", "community": 2, "community_name": "Clinical Knowledge & Chatbot", "source_file": "app.py", "file_type": "code", "degree": 3}, {"id": "image_security", "label": "Anti-Image Filter Security", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 12.2, "font": {"size": 0, "color": "#ffffff"}, "title": "Anti-Image Filter Security", "community": 2, "community_name": "Clinical Knowledge & Chatbot", "source_file": "app.py", "file_type": "code", "degree": 2}, {"id": "db_models", "label": "SQLAlchemy Models (models.py)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 14.4, "font": {"size": 0, "color": "#ffffff"}, "title": "SQLAlchemy Models (models.py)", "community": 3, "community_name": "Frontend Views & Design System", "source_file": "models.py", "file_type": "code", "degree": 4}, {"id": "user_model", "label": "User Model (User)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "User Model (User)", "community": 3, "community_name": "Frontend Views & Design System", "source_file": "models.py", "file_type": "code", "degree": 3}, {"id": "forum_model", "label": "Forum Models (ForumRoom, ForumMessage)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Forum Models (ForumRoom, ForumMessage)", "community": 3, "community_name": "Frontend Views & Design System", "source_file": "models.py", "file_type": "code", "degree": 1}, {"id": "private_msg_model", "label": "Private Message Model (PrivateMessage)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Private Message Model (PrivateMessage)", "community": 3, "community_name": "Frontend Views & Design System", "source_file": "models.py", "file_type": "code", "degree": 1}, {"id": "chatbot_core", "label": "Chatbot Logic &amp; Topics (chatbot.py)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 12.2, "font": {"size": 0, "color": "#ffffff"}, "title": "Chatbot Logic &amp; Topics (chatbot.py)", "community": 2, "community_name": "Clinical Knowledge & Chatbot", "source_file": "chatbot.py", "file_type": "code", "degree": 2}, {"id": "conditions_db", "label": "10 Clinical Conditions JSON", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 12.2, "font": {"size": 0, "color": "#ffffff"}, "title": "10 Clinical Conditions JSON", "community": 2, "community_name": "Clinical Knowledge & Chatbot", "source_file": "static/data/conditions.json", "file_type": "document", "degree": 2}, {"id": "view_conditions", "label": "Conditions Catalog View (index.html)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Conditions Catalog View (index.html)", "community": 2, "community_name": "Clinical Knowledge & Chatbot", "source_file": "templates/index.html", "file_type": "document", "degree": 1}, {"id": "view_forum", "label": "Forum &amp; Room Chat View (forum.html)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Forum &amp; Room Chat View (forum.html)", "community": 2, "community_name": "Clinical Knowledge & Chatbot", "source_file": "templates/forum.html", "file_type": "document", "degree": 1}, {"id": "view_private_chat", "label": "1:1 Private Chat View (private_chat.html)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "1:1 Private Chat View (private_chat.html)", "community": 2, "community_name": "Clinical Knowledge & Chatbot", "source_file": "templates/private_chat.html", "file_type": "document", "degree": 1}, {"id": "view_search", "label": "User Search View (search.html)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "User Search View (search.html)", "community": 3, "community_name": "Frontend Views & Design System", "source_file": "templates/search.html", "file_type": "document", "degree": 1}, {"id": "view_profile", "label": "Profile Customizer View (profile.html)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Profile Customizer View (profile.html)", "community": 3, "community_name": "Frontend Views & Design System", "source_file": "templates/profile.html", "file_type": "document", "degree": 1}, {"id": "view_chatbot", "label": "Interactive Chatbot View (chatbot.html)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 11.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Interactive Chatbot View (chatbot.html)", "community": 2, "community_name": "Clinical Knowledge & Chatbot", "source_file": "templates/chatbot.html", "file_type": "document", "degree": 1}, {"id": "client_chat_js", "label": "SocketIO Client Coordinator (chat.js)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "SocketIO Client Coordinator (chat.js)", "community": 2, "community_name": "Clinical Knowledge & Chatbot", "source_file": "static/js/chat.js", "file_type": "code", "degree": 3}, {"id": "client_bot_js", "label": "Chatbot Client Delay &amp; Typing (chatbot.js)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 12.2, "font": {"size": 0, "color": "#ffffff"}, "title": "Chatbot Client Delay &amp; Typing (chatbot.js)", "community": 2, "community_name": "Clinical Knowledge & Chatbot", "source_file": "static/js/chatbot.js", "file_type": "code", "degree": 2}, {"id": "design_system", "label": "Editorial Design System CSS (style.css)", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Editorial Design System CSS (style.css)", "community": 7, "community_name": "Community 7", "source_file": "static/css/style.css", "file_type": "document", "degree": 0}];
+const RAW_EDGES = [{"from": "app", "to": "models", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "chatbot", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_contains_image_content", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_sanitize_message", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_load_conditions", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_load_user", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_index", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_condition_detail", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_login", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_register", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_logout", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_profile", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_view_user_profile", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_search_users", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_forum_list", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_forum_room", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_create_room", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_private_chat", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_chatbot_page", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_chatbot_api", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_handle_join_forum", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_handle_leave_forum", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_handle_forum_message", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_handle_join_private", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_handle_leave_private", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_handle_private_message", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app", "to": "app_init_db", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "app_contains_image_content", "to": "app_handle_forum_message", "label": "calls", "title": "calls [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "app_contains_image_content", "to": "app_handle_private_message", "label": "calls", "title": "calls [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "app_sanitize_message", "to": "app_handle_forum_message", "label": "calls", "title": "calls [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "app_sanitize_message", "to": "app_handle_private_message", "label": "calls", "title": "calls [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "app_load_conditions", "to": "app_index", "label": "calls", "title": "calls [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "app_load_conditions", "to": "app_condition_detail", "label": "calls", "title": "calls [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "models", "to": "models_utc_now", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "models", "to": "models_user", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "models", "to": "models_forumroom", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "models", "to": "models_forummessage", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "models", "to": "models_privatemessage", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "models_user", "to": "usermixin", "label": "inherits", "title": "inherits [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "models_user", "to": "models_user_set_password", "label": "method", "title": "method [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "models_user", "to": "models_user_check_password", "label": "method", "title": "method [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "models_user", "to": "models_user_to_dict", "label": "method", "title": "method [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "models_forumroom", "to": "models_forumroom_to_dict", "label": "method", "title": "method [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "models_forummessage", "to": "models_forummessage_to_dict", "label": "method", "title": "method [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "models_privatemessage", "to": "models_privatemessage_to_dict", "label": "method", "title": "method [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "chatbot", "to": "chatbot_get_response", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "flask_app", "to": "db_models", "label": "imports", "title": "imports [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "flask_app", "to": "socketio_system", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "flask_app", "to": "auth_system", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "flask_app", "to": "chatbot_core", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "flask_app", "to": "image_security", "label": "enforces", "title": "enforces [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "flask_app", "to": "conditions_db", "label": "reads", "title": "reads [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "socketio_system", "to": "image_security", "label": "enforces", "title": "enforces [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "socketio_system", "to": "client_chat_js", "label": "synchronizes", "title": "synchronizes [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "db_models", "to": "user_model", "label": "defines", "title": "defines [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "db_models", "to": "forum_model", "label": "defines", "title": "defines [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "db_models", "to": "private_msg_model", "label": "defines", "title": "defines [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "user_model", "to": "view_profile", "label": "edits", "title": "edits [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "user_model", "to": "view_search", "label": "queries", "title": "queries [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "chatbot_core", "to": "client_bot_js", "label": "fetches", "title": "fetches [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "conditions_db", "to": "view_conditions", "label": "renders", "title": "renders [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "view_forum", "to": "client_chat_js", "label": "includes", "title": "includes [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "view_private_chat", "to": "client_chat_js", "label": "includes", "title": "includes [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "view_chatbot", "to": "client_bot_js", "label": "includes", "title": "includes [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}];
+const LEGEND = [{"cid": 0, "color": "#4E79A7", "label": "Flask Backend & WebSockets", "count": 19}, {"cid": 1, "color": "#F28E2B", "label": "SQLAlchemy Data Layer", "count": 13}, {"cid": 2, "color": "#E15759", "label": "Clinical Knowledge & Chatbot", "count": 12}, {"cid": 3, "color": "#76B7B2", "label": "Frontend Views & Design System", "count": 6}, {"cid": 4, "color": "#59A14F", "label": "Community 4", "count": 4}, {"cid": 5, "color": "#EDC948", "label": "Community 5", "count": 3}, {"cid": 6, "color": "#B07AA1", "label": "Community 6", "count": 2}, {"cid": 7, "color": "#FF9DA7", "label": "Community 7", "count": 1}];
+
+// Build vis datasets
+const nodesDS = new vis.DataSet(RAW_NODES.map(n => ({
+  id: n.id, label: n.label, color: n.color, size: n.size,
+  font: n.font, title: n.title,
+  _community: n.community, _community_name: n.community_name,
+  _source_file: n.source_file, _file_type: n.file_type, _degree: n.degree,
+})));
+
+const edgesDS = new vis.DataSet(RAW_EDGES.map((e, i) => ({
+  id: i, from: e.from, to: e.to,
+  label: '',
+  title: e.title,
+  dashes: e.dashes,
+  width: e.width,
+  color: e.color,
+  arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+})));
+
+const container = document.getElementById('graph');
+const network = new vis.Network(container, { nodes: nodesDS, edges: edgesDS }, {
+  physics: {
+    enabled: true,
+    solver: 'forceAtlas2Based',
+    forceAtlas2Based: {
+      gravitationalConstant: -60,
+      centralGravity: 0.005,
+      springLength: 120,
+      springConstant: 0.08,
+      damping: 0.4,
+      avoidOverlap: 0.8,
+    },
+    stabilization: { iterations: 200, fit: true },
+  },
+  interaction: {
+    hover: true,
+    tooltipDelay: 100,
+    hideEdgesOnDrag: true,
+    navigationButtons: false,
+    keyboard: false,
+  },
+  nodes: { shape: 'dot', borderWidth: 1.5 },
+  edges: { smooth: { type: 'continuous', roundness: 0.2 }, selectionWidth: 3 },
+});
+
+network.once('stabilizationIterationsDone', () => {
+  network.setOptions({ physics: { enabled: false } });
+});
+
+function showInfo(nodeId) {
+  const n = nodesDS.get(nodeId);
+  if (!n) return;
+  const neighborIds = network.getConnectedNodes(nodeId);
+  const neighborItems = neighborIds.map(nid => {
+    const nb = nodesDS.get(nid);
+    const color = nb ? nb.color.background : '#555';
+    return `<span class="neighbor-link" style="border-left-color:${color}" onclick="focusNode('${nid}')">${nb ? nb.label : nid}</span>`;
+  }).join('');
+  document.getElementById('info-content').innerHTML = `
+    <div class="field"><b>${n.label}</b></div>
+    <div class="field">Type: ${n._file_type || 'unknown'}</div>
+    <div class="field">Community: ${n._community_name}</div>
+    <div class="field">Source: ${n._source_file || '-'}</div>
+    <div class="field">Degree: ${n._degree}</div>
+    ${neighborIds.length ? `<div class="field" style="margin-top:8px;color:#aaa;font-size:11px">Neighbors (${neighborIds.length})</div><div id="neighbors-list">${neighborItems}</div>` : ''}
+  `;
+}
+
+function focusNode(nodeId) {
+  network.focus(nodeId, { scale: 1.4, animation: true });
+  network.selectNodes([nodeId]);
+  showInfo(nodeId);
+}
+
+network.on('click', params => {
+  if (params.nodes.length > 0) showInfo(params.nodes[0]);
+  else document.getElementById('info-content').innerHTML = '<span class="empty">Click a node to inspect it</span>';
+});
+
+const searchInput = document.getElementById('search');
+const searchResults = document.getElementById('search-results');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  searchResults.innerHTML = '';
+  if (!q) { searchResults.style.display = 'none'; return; }
+  const matches = RAW_NODES.filter(n => n.label.toLowerCase().includes(q)).slice(0, 20);
+  if (!matches.length) { searchResults.style.display = 'none'; return; }
+  searchResults.style.display = 'block';
+  matches.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'search-item';
+    el.textContent = n.label;
+    el.style.borderLeft = `3px solid ${n.color.background}`;
+    el.style.paddingLeft = '8px';
+    el.onclick = () => {
+      network.focus(n.id, { scale: 1.5, animation: true });
+      network.selectNodes([n.id]);
+      showInfo(n.id);
+      searchResults.style.display = 'none';
+      searchInput.value = '';
+    };
+    searchResults.appendChild(el);
+  });
+});
+document.addEventListener('click', e => {
+  if (!searchResults.contains(e.target) && e.target !== searchInput)
+    searchResults.style.display = 'none';
+});
+
+const hiddenCommunities = new Set();
+const legendEl = document.getElementById('legend');
+LEGEND.forEach(c => {
+  const item = document.createElement('div');
+  item.className = 'legend-item';
+  item.innerHTML = `<div class="legend-dot" style="background:${c.color}"></div>
+    <span class="legend-label">${c.label}</span>
+    <span class="legend-count">${c.count}</span>`;
+  item.onclick = () => {
+    if (hiddenCommunities.has(c.cid)) {
+      hiddenCommunities.delete(c.cid);
+      item.classList.remove('dimmed');
+    } else {
+      hiddenCommunities.add(c.cid);
+      item.classList.add('dimmed');
+    }
+    const updates = RAW_NODES
+      .filter(n => n.community === c.cid)
+      .map(n => ({ id: n.id, hidden: hiddenCommunities.has(c.cid) }));
+    nodesDS.update(updates);
+  };
+  legendEl.appendChild(item);
+});
+</script>
+<script>
+// Render hyperedges as shaded regions
+const hyperedges = [];
+function drawHyperedges() {
+    const canvas = network.canvas.frame.canvas;
+    const ctx = canvas.getContext('2d');
+    hyperedges.forEach(h => {
+        const positions = h.nodes
+            .map(nid => network.getPositions([nid])[nid])
+            .filter(p => p !== undefined);
+        if (positions.length < 2) return;
+        // Draw convex hull as filled polygon
+        ctx.save();
+        ctx.globalAlpha = 0.12;
+        ctx.fillStyle = '#6366f1';
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        const scale = network.getScale();
+        const offset = network.getViewPosition();
+        const toCanvas = (p) => ({
+            x: (p.x - offset.x) * scale + canvas.width / 2,
+            y: (p.y - offset.y) * scale + canvas.height / 2
+        });
+        const pts = positions.map(toCanvas);
+        // Expand hull slightly
+        const cx = pts.reduce((s, p) => s + p.x, 0) / pts.length;
+        const cy = pts.reduce((s, p) => s + p.y, 0) / pts.length;
+        const expanded = pts.map(p => ({
+            x: cx + (p.x - cx) * 1.15,
+            y: cy + (p.y - cy) * 1.15
+        }));
+        ctx.moveTo(expanded[0].x, expanded[0].y);
+        expanded.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 0.4;
+        ctx.stroke();
+        // Label
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = '#4f46e5';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(h.label, cx, cy - 5);
+        ctx.restore();
+    });
+}
+network.on('afterDrawing', drawHyperedges);
+</script>
+</body>
+</html>

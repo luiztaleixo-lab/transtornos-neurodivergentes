@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Buscar Pessoas e Perfis | NeuroGuia{% endblock %}
+
+{% block content %}
+<div class="container search-page-container">
+    <header class="page-header-simple">
+        <h1 class="page-main-title">Buscar Pessoas</h1>
+        <p class="page-lead-simple">Encontre outros membros da comunidade para iniciar conversas privadas 1:1 e trocar experiencias.</p>
+    </header>
+
+    <div class="search-box-card">
+        <form action="{{ url_for('search_users') }}" method="GET" class="search-form-flex">
+            <input type="text" name="q" value="{{ query }}" placeholder="Digite o nome de usuario..." class="form-input search-input" autocomplete="off">
+            <button type="submit" class="btn-primary">Buscar</button>
+        </form>
+    </div>
+
+    <div class="search-results-section">
+        {% if query %}
+            <h2 class="results-count-title">Resultados para "{{ query }}" ({{ users | length }})</h2>
+            <div class="user-cards-grid">
+                {% for u in users %}
+                    <div class="user-card">
+                        <div class="user-card-header">
+                            <span class="user-avatar-large" style="background-color: {{ u.avatar_color }};">
+                                {{ u.username[:2].upper() }}
+                            </span>
+                            <div class="user-card-info">
+                                <h3 class="user-card-username">{{ u.username }}</h3>
+                                <span class="user-card-date">Cadastrado em {{ u.created_at.strftime('%d/%m/%Y') if u.created_at else '' }}</span>
+                            </div>
+                        </div>
+                        <p class="user-card-bio">{{ u.bio or 'Sem biografia informada.' }}</p>
+                        <div class="user-card-actions">
+                            <a href="{{ url_for('view_user_profile', user_id=u.id) }}" class="btn-subtle btn-sm">Ver Perfil</a>
+                            {% if current_user.is_authenticated and current_user.id != u.id %}
+                                <a href="{{ url_for('private_chat', recipient_id=u.id) }}" class="btn-secondary btn-sm">Abrir Chat Privado</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="empty-search-state">
+                        <p>Nenhum usuario encontrado com o termo informado.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="search-intro-box">
+                <p>Utilize a barra de pesquisa acima para localizar membros pelo nome de usuario.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

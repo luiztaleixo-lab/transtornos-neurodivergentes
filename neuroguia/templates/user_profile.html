@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil de {{ user.username }} | NeuroGuia{% endblock %}
+
+{% block content %}
+<div class="container profile-page-container">
+    <div class="profile-card-layout single-view">
+        <div class="profile-public-box">
+            <div class="avatar-preview-box">
+                <span class="user-avatar-huge" style="background-color: {{ user.avatar_color }};">
+                    {{ user.username[:2].upper() }}
+                </span>
+            </div>
+            <h1 class="profile-username-heading">{{ user.username }}</h1>
+            <span class="profile-meta-date">Membro desde {{ user.created_at.strftime('%d/%m/%Y') if user.created_at else '' }}</span>
+            
+            <div class="profile-bio-content">
+                <h2 class="bio-label">Sobre</h2>
+                <p class="bio-text">{{ user.bio or 'Este membro ainda nao adicionou uma biografia.' }}</p>
+            </div>
+
+            <div class="profile-stats-box">
+                <div class="stat-item">
+                    <strong class="stat-value">{{ user.forum_messages.count() }}</strong>
+                    <span class="stat-label">Mensagens no Forum</span>
+                </div>
+                <div class="stat-item">
+                    <strong class="stat-value">{{ user.created_rooms.count() }}</strong>
+                    <span class="stat-label">Salas Criadas</span>
+                </div>
+            </div>
+
+            <div class="public-profile-actions">
+                {% if current_user.is_authenticated and current_user.id != user.id %}
+                    <a href="{{ url_for('private_chat', recipient_id=user.id) }}" class="btn-primary">Iniciar Conversa Privada</a>
+                {% elif not current_user.is_authenticated %}
+                    <a href="{{ url_for('login') }}" class="btn-secondary">Fazer login para conversar</a>
+                {% endif %}
+                <a href="{{ url_for('search_users') }}" class="btn-subtle">&larr; Voltar para a Busca</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

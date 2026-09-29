@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Forum Comunitario | NeuroGuia{% endblock %}
+
+{% block content %}
+<div class="container forum-page-layout">
+    <aside class="forum-sidebar">
+        <div class="forum-sidebar-header">
+            <h1 class="sidebar-main-heading">Salas de Discussao</h1>
+            <button type="button" class="btn-primary btn-sm" id="openCreateRoomBtn">Criar Nova Sala</button>
+        </div>
+
+        <div class="room-list" role="list">
+            {% for r in rooms %}
+                <a href="{{ url_for('forum_room', room_id=r.id) }}" 
+                   class="room-card-link {% if active_room and active_room.id == r.id %}active{% endif %}">
+                    <div class="room-card-top">
+                        <strong class="room-card-title">{{ r.name }}</strong>
+                        <span class="room-badge">{{ r.messages.count() }} msgs</span>
+                    </div>
+                    <p class="room-card-desc">{{ r.description or 'Sem descricao definida.' }}</p>
+                    <div class="room-card-footer">
+                        <span>Criada por: {{ r.creator.username if r.creator else 'Sistema' }}</span>
+                    </div>
+                </a>
+            {% else %}
+                <p class="empty-hint">Nenhuma sala encontrada.</p>
+            {% endfor %}
+        </div>
+    </aside>
+
+    <section class="forum-chat-panel">
+        {% if active_room %}
+            <header class="chat-panel-header">
+                <div>
+                    <h2 class="chat-panel-title">{{ active_room.name }}</h2>
+                    <p class="chat-panel-desc">{{ active_room.description }}</p>
+                </div>
+                <div class="chat-status-pill">
+                    <span class="status-dot"></span>
+                    <span>Sala Publica em Tempo Real</span>
+                </div>
+            </header>
+
+            <div class="chat-messages-container" id="forumMessagesContainer">
+                {% for msg in messages %}
+                    <div class="chat-message-row {% if current_user.is_authenticated and msg.user_id == current_user.id %}my-message{% endif %}">
+                        <span class="message-avatar" style="background-color: {{ msg.user.avatar_color if msg.user else '#4a6b5d' }};">
+                            {{ msg.user.username[:2].upper() if msg.user else '?' }}
+                        </span>
+                        <div class="message-bubble">
+                            <div class="message-meta">
+                                <strong class="message-author">
+                                    <a href="{{ url_for('view_user_profile', user_id=msg.user_id) }}">{{ msg.user.username if msg.user else 'Desconhecido' }}</a>
+                                </strong>
+                                <time class="message-time">{{ msg.created_at.strftime('%H:%M') if msg.created_at else '' }}</time>
+                            </div>
+                            <div class="message-text">{{ msg.content }}</div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="empty-chat-state" id="emptyChatState">
+                        <p>Nenhuma mensagem nesta sala ainda. Seja a primeira pessoa a participar da conversa.</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="chat-rules-notice">
+                <span>Regra de seguranca: O envio de imagens ou links de imagens e bloqueado no sistema.</span>
+            </div>
+
+            {% if current_user.is_authenticated %}
+                <form id="forumMessageForm" class="chat-compose-form" data-room-id="{{ active_room.id }}">
+                    <input type="text" id="forumMessageInput" placeholder="Digite sua mensagem para a sala..." maxlength="2000" autocomplete="off" required class="form-input chat-input">
+                    <button type="submit" class="btn-primary btn-send">Enviar</button>
+                </form>
+            {% else %}
+                <div class="chat-login-prompt">
+                    <span>Voce precisa estar autenticado para enviar mensagens.</span>
+                    <a href="{{ url_for('login', next=request.path) }}" class="btn-secondary btn-sm">Fazer Login</a>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="empty-panel-state">
+                <h2>Selecione uma sala de discussao</h2>
+                <p>Escolha uma das salas listadas na coluna a esquerda para visualizar as conversas ou crie uma nova sala para iniciar um topico inedito.</p>
+            </div>
+        {% endif %}
+    </section>
+</div>
+
+<div class="modal-backdrop" id="createRoomModal" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h3 class="modal-title">Criar Nova Sala de Discussao</h3>
+            <button type="button" class="modal-close" id="closeCreateRoomBtn">&times;</button>
+        </div>
+        {% if current_user.is_authenticated %}
+            <form action="{{ url_for('create_room') }}" method="POST" class="modal-body">
+                <div class="form-group">
+                    <label for="room_name" class="form-label">Nome da Sala</label>
+                    <input type="text" name="name" id="room_name" class="form-input" placeholder="Ex: Estrategias de Foco no Trabalho" maxlength="100" required>
+                </div>
+                <div class="form-group">
+                    <label for="room_desc" class="form-label">Descricao / Objetivo</label>
+                    <textarea name="description" id="room_desc" class="form-textarea" rows="3" placeholder="Breve resumo do proposito da sala..." maxlength="255"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-subtle" id="cancelCreateRoomBtn">Cancelar</button>
+                    <button type="submit" class="btn-primary">Criar Sala</button>
+                </div>
+            </form>
+        {% else %}
+            <div class="modal-body">
+                <p>Voce precisa fazer login para criar uma sala.</p>
+                <div class="modal-footer">
+                    <a href="{{ url_for('login') }}" class="btn-primary">Fazer Login</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Meu Perfil | NeuroGuia{% endblock %}
+
+{% block content %}
+<div class="container profile-page-container">
+    <div class="profile-card-layout">
+        <aside class="profile-summary-side">
+            <div class="avatar-preview-box">
+                <span class="user-avatar-huge" id="avatarPreview" style="background-color: {{ user.avatar_color }};">
+                    {{ user.username[:2].upper() }}
+                </span>
+            </div>
+            <h1 class="profile-username-heading">{{ user.username }}</h1>
+            <span class="profile-meta-date">Membro desde {{ user.created_at.strftime('%d/%m/%Y') if user.created_at else '' }}</span>
+            <div class="profile-stats-box">
+                <div class="stat-item">
+                    <strong class="stat-value">{{ user.forum_messages.count() }}</strong>
+                    <span class="stat-label">Mensagens no Forum</span>
+                </div>
+                <div class="stat-item">
+                    <strong class="stat-value">{{ user.created_rooms.count() }}</strong>
+                    <span class="stat-label">Salas Criadas</span>
+                </div>
+            </div>
+        </aside>
+
+        <section class="profile-edit-side">
+            <h2 class="profile-section-title">Editar Informacoes do Perfil</h2>
+            <form action="{{ url_for('profile') }}" method="POST" class="profile-form">
+                <div class="form-group">
+                    <label for="bioInput" class="form-label">Biografia / Apresentacao</label>
+                    <textarea name="bio" id="bioInput" rows="4" class="form-textarea" maxlength="500" placeholder="Escreva um pouco sobre voce, seus interesses e sua trajetoria...">{{ user.bio or '' }}</textarea>
+                    <span class="form-hint">Limite maximo de 500 caracteres.</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Paleta do Avatar</label>
+                    <p class="form-hint">Selecione uma cor para personalizar a exibicao visual do seu identificador:</p>
+                    <div class="color-picker-palette">
+                        {% set colors = ['#4a6b5d', '#c2593f', '#2f4858', '#8c6d46', '#5b5377', '#3a6073'] %}
+                        {% for c in colors %}
+                            <label class="color-option-label">
+                                <input type="radio" name="avatar_color" value="{{ c }}" {% if user.avatar_color == c %}checked{% endif %} class="color-radio-input" onchange="document.getElementById('avatarPreview').style.backgroundColor = '{{ c }}';">
+                                <span class="color-swatch" style="background-color: {{ c }};"></span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Salvar Alteracoes</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+{% endblock %}

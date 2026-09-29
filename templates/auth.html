@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}{% if mode == 'register' %}Criar Conta{% else %}Entrar{% endif %} | NeuroGuia{% endblock %}
+
+{% block content %}
+<div class="container auth-page-container">
+    <div class="auth-card">
+        <header class="auth-header">
+            <h1 class="auth-title">{% if mode == 'register' %}Cadastro de Membro{% else %}Acesso a Plataforma{% endif %}</h1>
+            <p class="auth-subtitle">
+                {% if mode == 'register' %}
+                    Crie seu cadastro para participar dos foruns comunitarios e abrir conversas privadas.
+                {% else %}
+                    Informe suas credenciais para acessar sua conta no NeuroGuia.
+                {% endif %}
+            </p>
+        </header>
+
+        {% if mode == 'register' %}
+            <form action="{{ url_for('register') }}" method="POST" class="auth-form">
+                <div class="form-group">
+                    <label for="username" class="form-label">Nome de Usuario</label>
+                    <input type="text" name="username" id="username" class="form-input" required minlength="3" maxlength="30" placeholder="Ex: mariasilva" autocomplete="username">
+                    <span class="form-hint">Entre 3 e 30 caracteres alfanumericos.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Senha</label>
+                    <input type="password" name="password" id="password" class="form-input" required minlength="6" placeholder="Minimo de 6 caracteres" autocomplete="new-password">
+                </div>
+
+                <div class="form-group">
+                    <label for="bio" class="form-label">Biografia (Opcional)</label>
+                    <textarea name="bio" id="bio" class="form-textarea" rows="3" maxlength="500" placeholder="Conte brevemente sobre seus interesses..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Cor do Avatar</label>
+                    <div class="color-picker-palette">
+                        {% set colors = ['#4a6b5d', '#c2593f', '#2f4858', '#8c6d46', '#5b5377', '#3a6073'] %}
+                        {% for c in colors %}
+                            <label class="color-option-label">
+                                <input type="radio" name="avatar_color" value="{{ c }}" {% if loop.first %}checked{% endif %} class="color-radio-input">
+                                <span class="color-swatch" style="background-color: {{ c }};"></span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="auth-actions-group">
+                    <button type="submit" class="btn-primary btn-block">Criar Minha Conta</button>
+                </div>
+
+                <div class="auth-switch-prompt">
+                    <span>Ja possui uma conta?</span>
+                    <a href="{{ url_for('login') }}" class="link-inline">Fazer Login</a>
+                </div>
+            </form>
+        {% else %}
+            <form action="{{ url_for('login') }}" method="POST" class="auth-form">
+                <div class="form-group">
+                    <label for="username" class="form-label">Nome de Usuario</label>
+                    <input type="text" name="username" id="username" class="form-input" required placeholder="Seu nome de usuario" autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Senha</label>
+                    <input type="password" name="password" id="password" class="form-input" required placeholder="Sua senha" autocomplete="current-password">
+                </div>
+
+                <div class="auth-actions-group">
+                    <button type="submit" class="btn-primary btn-block">Entrar na Plataforma</button>
+                </div>
+
+                <div class="auth-switch-prompt">
+                    <span>Ainda nao tem conta?</span>
+                    <a href="{{ url_for('register') }}" class="link-inline">Cadastre-se</a>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
